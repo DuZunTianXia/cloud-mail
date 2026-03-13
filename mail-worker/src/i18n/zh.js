@@ -99,7 +99,14 @@ const zh = {
 		"设置查看": "设置查看",
 		"设置修改": "设置修改",
 		'发件重置': '发件重置'
-	}
+	},
+	apiKeyNameRequired: 'API密钥名称不能为空',
+	apiKeyRequired: 'API密钥不能为空',
+	apiKeyInvalid: 'API密钥无效或已删除',
+	apiKeyExpired: 'API密钥已过期',
+	apiKeyDisabled: 'API密钥已被禁用',
+	emailRequired: '邮箱地址不能为空',
+	accountNotFound: '邮箱账号不存在'
 }
 
 export default zh

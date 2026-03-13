@@ -553,6 +553,20 @@ const dbInit = {
 		`).run();
 
 		await c.env.db.prepare(`
+		  CREATE TABLE IF NOT EXISTS api_key (
+			key_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			key_name TEXT NOT NULL,
+			api_key TEXT NOT NULL,
+			user_id INTEGER NOT NULL,
+			status INTEGER DEFAULT 1 NOT NULL,
+			last_used DATETIME,
+			create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+			expire_time DATETIME,
+			is_del INTEGER DEFAULT 0 NOT NULL
+		  )
+		`).run();
+
+		await c.env.db.prepare(`
 		  CREATE TABLE IF NOT EXISTS account (
 			account_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			email TEXT NOT NULL,

@@ -99,7 +99,14 @@ const en = {
 		"设置查看": "View Settings",
 		"设置修改": "Change Settings",
 		"发件重置": "Reset Send Count"
-	}
+	},
+	apiKeyNameRequired: 'API Key name cannot be empty',
+	apiKeyRequired: 'API Key cannot be empty',
+	apiKeyInvalid: 'Invalid API Key or deleted',
+	apiKeyExpired: 'API Key has expired',
+	apiKeyDisabled: 'API Key has been disabled',
+	emailRequired: 'Email address cannot be empty',
+	accountNotFound: 'Email account not found'
 };
 
 export default en;
