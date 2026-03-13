@@ -51,6 +51,96 @@ const routes = [
                     menu: true
                 }
             },
+            {
+                path: '/send',
+                name: 'send',
+                component: () => import('@/views/send/index.vue'),
+                meta: {
+                    title: 'sent',
+                    name: 'send',
+                    menu: false
+                }
+            },
+            {
+                path: '/draft',
+                name: 'draft',
+                component: () => import('@/views/draft/index.vue'),
+                meta: {
+                    title: 'drafts',
+                    name: 'draft',
+                    menu: false
+                }
+            },
+            {
+                path: '/user',
+                name: 'user',
+                component: () => import('@/views/user/index.vue'),
+                meta: {
+                    title: 'allUsers',
+                    name: 'user',
+                    menu: false
+                }
+            },
+            {
+                path: '/all-email',
+                name: 'all-email',
+                component: () => import('@/views/all-email/index.vue'),
+                meta: {
+                    title: 'allMail',
+                    name: 'all-email',
+                    menu: false
+                }
+            },
+            {
+                path: '/role',
+                name: 'role',
+                component: () => import('@/views/role/index.vue'),
+                meta: {
+                    title: 'permissions',
+                    name: 'role',
+                    menu: false
+                }
+            },
+            {
+                path: '/reg-key',
+                name: 'reg-key',
+                component: () => import('@/views/reg-key/index.vue'),
+                meta: {
+                    title: 'inviteCode',
+                    name: 'reg-key',
+                    menu: false
+                }
+            },
+            {
+                path: '/api-key',
+                name: 'api-key',
+                component: () => import('@/views/api-key/index.vue'),
+                meta: {
+                    title: 'apiKeyManage',
+                    name: 'api-key',
+                    menu: false
+                }
+            },
+            {
+                path: '/sys-setting',
+                name: 'sys-setting',
+                component: () => import('@/views/sys-setting/index.vue'),
+                meta: {
+                    title: 'SystemSettings',
+                    name: 'sys-setting',
+                    menu: false
+                }
+            },
+            {
+                path: '/analysis',
+                name: 'analysis',
+                component: () => import('@/views/analysis/index.vue'),
+                meta: {
+                    title: 'analytics',
+                    name: 'analysis',
+                    menu: false
+                }
+            },
         ]
 
     },
