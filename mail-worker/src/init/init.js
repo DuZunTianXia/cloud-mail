@@ -28,6 +28,7 @@ const dbInit = {
 		await this.v2_7DB(c);
 		await this.v2_8DB(c);
 		await this.v2_9DB(c);
+		await this.v3_0DB(c);
 		await settingService.refresh(c);
 		return c.text('success');
 	},
@@ -37,6 +38,26 @@ const dbInit = {
 			await c.env.db.prepare(`UPDATE setting SET auto_refresh = 5 WHERE auto_refresh = 1;`).run();
 		} catch (e) {
 			console.warn(`跳过字段：${e.message}`);
+		}
+	},
+
+	async v3_0DB(c) {
+		try {
+			await c.env.db.prepare(`
+			  CREATE TABLE IF NOT EXISTS api_key (
+				key_id INTEGER PRIMARY KEY AUTOINCREMENT,
+				key_name TEXT NOT NULL,
+				api_key TEXT NOT NULL,
+				user_id INTEGER NOT NULL,
+				status INTEGER DEFAULT 1 NOT NULL,
+				last_used DATETIME,
+				create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+				expire_time DATETIME,
+				is_del INTEGER DEFAULT 0 NOT NULL
+			  )
+			`).run();
+		} catch (e) {
+			console.warn(`跳过表创建：${e.message}`);
 		}
 	},
 
