@@ -8,7 +8,7 @@ export const apiKey = sqliteTable('api_key', {
 	userId: integer('user_id').notNull(),
 	status: integer('status').default(1).notNull(),
 	lastUsed: text('last_used'),
-	createTime: text('create_time').default(sql`CURRENT_TIMESTAMP'),
+	createTime: text('create_time').default(sql`CURRENT_TIMESTAMP`),
 	expireTime: text('expire_time'),
 	isDel: integer('is_del').default(0).notNull()
 });
