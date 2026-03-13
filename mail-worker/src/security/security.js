@@ -19,7 +19,8 @@ const exclude = [
 	'/telegram',
 	'/test',
 	'/oauth',
-	'/external/emails'
+	'/external/emails',
+	'/apiKey'
 ];
 
 const requirePerms = [
@@ -57,10 +58,7 @@ const requirePerms = [
 	'/regKey/list',
 	'/regKey/delete',
 	'/regKey/clearNotUse',
-	'/regKey/history',
-	'/apiKey/generate',
-	'/apiKey/list',
-	'/apiKey/delete'
+	'/regKey/history'
 ];
 
 const premKey = {
