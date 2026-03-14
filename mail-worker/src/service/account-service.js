@@ -5,8 +5,9 @@ import userService from './user-service';
 import emailService from './email-service';
 import orm from '../entity/orm';
 import account from '../entity/account';
+import email from '../entity/email';
 import { and, asc, eq, gt, inArray, count, sql, ne, or, lt, desc } from 'drizzle-orm';
-import {accountConst, isDel, settingConst} from '../const/entity-const';
+import {accountConst, emailConst, isDel, settingConst} from '../const/entity-const';
 import settingService from './setting-service';
 import turnstileService from './turnstile-service';
 import roleService from './role-service';
@@ -89,6 +90,22 @@ const accountService = {
 
 
 		accountRow = await orm(c).insert(account).values({ email: email, userId: userId, name: emailUtils.getName(email) }).returning().get();
+
+		// 将历史 NOONE 状态的邮件关联到新账户
+		await orm(c).update(email)
+			.set({
+				userId: userId,
+				accountId: accountRow.accountId,
+				status: emailConst.status.RECEIVE
+			})
+			.where(
+				and(
+					sql`${email.toEmail} COLLATE NOCASE = ${email}`,
+					eq(email.status, emailConst.status.NOONE),
+					eq(email.type, emailConst.type.RECEIVE)
+				)
+			)
+			.run();
 
 		if (addEmailVerify === settingConst.addEmailVerify.COUNT && !addVerifyOpen) {
 			const row = await verifyRecordService.increaseAddCount(c);
