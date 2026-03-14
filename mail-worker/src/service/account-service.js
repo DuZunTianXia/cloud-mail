@@ -50,28 +50,47 @@ const accountService = {
 
 		let accountRow = await this.selectByEmailIncludeDel(c, email);
 
+		const userRow = await userService.selectById(c, userId);
+		const roleRow = await roleService.selectById(c, userRow.type);
+		const isAdmin = userRow.email === c.env.admin;
+
 		if (accountRow && accountRow.isDel === isDel.DELETE) {
 			throw new BizError(t('isDelAccount'));
 		}
 
+		// 如果邮箱已存在
 		if (accountRow) {
-			throw new BizError(t('isRegAccount'));
-		}
+			// 非管理员不允许添加已存在的邮箱
+			if (!isAdmin) {
+				throw new BizError(t('isRegAccount'));
+			}
+			// 管理员添加已存在的邮箱，如果已属于自己则直接返回，否则更新归属
+			if (accountRow.userId === userId) {
+				// 已属于当前用户，直接返回
+				accountRow.addVerifyOpen = false;
+				return accountRow;
+			}
+			// 更新邮箱归属到当前用户
+			await orm(c).update(account)
+				.set({ userId: userId, name: emailUtils.getName(email) })
+				.where(eq(account.accountId, accountRow.accountId))
+				.run();
+			accountRow.userId = userId;
+			accountRow.name = emailUtils.getName(email);
+		} else {
+			// 邮箱不存在，创建新账户
+			if (!isAdmin) {
+				if (roleRow.accountCount > 0) {
+					const userAccountCount = await accountService.countUserAccount(c, userId)
+					if(userAccountCount >= roleRow.accountCount) throw new BizError(t('accountLimit'), 403);
+				}
 
-		const userRow = await userService.selectById(c, userId);
-		const roleRow = await roleService.selectById(c, userRow.type);
-
-		if (userRow.email !== c.env.admin) {
-
-			if (roleRow.accountCount > 0) {
-				const userAccountCount = await accountService.countUserAccount(c, userId)
-				if(userAccountCount >= roleRow.accountCount) throw new BizError(t('accountLimit'), 403);
+				if(!roleService.hasAvailDomainPerm(roleRow.availDomain, email)) {
+					throw new BizError(t('noDomainPermAdd'),403)
+				}
 			}
 
-			if(!roleService.hasAvailDomainPerm(roleRow.availDomain, email)) {
-				throw new BizError(t('noDomainPermAdd'),403)
-			}
-
+			accountRow = await orm(c).insert(account).values({ email: email, userId: userId, name: emailUtils.getName(email) }).returning().get();
 		}
 
 		let addVerifyOpen = false
@@ -88,10 +107,7 @@ const accountService = {
 			}
 		}
 
-
-		accountRow = await orm(c).insert(account).values({ email: email, userId: userId, name: emailUtils.getName(email) }).returning().get();
-
-		// 将历史 NOONE 状态的邮件关联到新账户
+		// 将历史 NOONE 状态的邮件关联到账户
 		await orm(c).update(email)
 			.set({
 				userId: userId,
